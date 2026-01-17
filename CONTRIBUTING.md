@@ -28,7 +28,7 @@ Thank you for your interest in contributing to Snail Tracker! This guide will he
 
 5. **Open Frontend**
    ```bash
-   cd frontend
+   cd public
    python -m http.server 8000
    # Visit http://localhost:8000
    ```
@@ -93,7 +93,7 @@ export default withAuth(handler);
 
 ### Adding a New Frontend Page
 
-1. Create HTML file in `frontend/`
+1. Create HTML file in `public/`
 2. Include stylesheet: `<link rel="stylesheet" href="css/styles.css">`
 3. Include scripts:
    ```html
@@ -133,7 +133,7 @@ Before submitting a PR, test:
 
 ### Using the Test Page
 
-1. Open `frontend/test.html`
+1. Open `public/test.html`
 2. Run all tests
 3. Verify all tests pass
 4. Test with different credentials
@@ -144,7 +144,7 @@ Before submitting:
 
 1. Check for XSS vulnerabilities
    ```bash
-   grep -r "innerHTML" frontend/js/
+   grep -r "innerHTML" public/js/
    # Verify all use escapeHtml()
    ```
 
