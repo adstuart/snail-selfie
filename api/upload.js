@@ -1,19 +1,36 @@
 // POST /api/upload - Upload image to Vercel Blob
-import { withAuth } from '../lib/auth.js';
 import { put } from '@vercel/blob';
 
-async function handler(req, res) {
+export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
     res.status(200).end();
     return;
   }
 
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
+    return;
+  }
+
+  // Simple auth check
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Basic ')) {
+    res.status(401).json({ error: 'Authentication required' });
+    return;
+  }
+
+  const base64Credentials = authHeader.split(' ')[1];
+  const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
+  const [username, password] = credentials.split(':');
+
+  if (username !== process.env.BASIC_AUTH_USER || password !== process.env.BASIC_AUTH_PASS) {
+    res.status(401).json({ error: 'Invalid credentials' });
     return;
   }
   
@@ -25,10 +42,8 @@ async function handler(req, res) {
       return;
     }
     
-    // Decode base64 file
     const buffer = Buffer.from(file, 'base64');
     
-    // Upload to Vercel Blob
     const blob = await put(filename, buffer, {
       access: 'public',
       addRandomSuffix: true,
@@ -43,5 +58,3 @@ async function handler(req, res) {
     res.status(500).json({ error: 'Failed to upload image', details: error.message });
   }
 }
-
-export default withAuth(handler);
