@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐌 Snail Tracker</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>🐌 Snail Tracker</h1>
+      <div class="header-actions">
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search snails...">
+          <select id="sortSelect">
+            <option value="name">Sort by Name</option>
+            <option value="last_seen">Sort by Last Seen</option>
+          </select>
+        </div>
+        <div class="flex gap-10">
+          <a href="add-snail.html" class="btn">+ Add Snail</a>
+          <button id="logoutBtn" class="btn-secondary">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <main class="container">
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading snails...</p>
+    </div>
+    
+    <div id="errorMessage" class="message message-error hidden"></div>
+    
+    <div id="snailGrid" class="snail-grid"></div>
+    
+    <div id="emptyState" class="card text-center hidden" style="margin-top: 40px;">
+      <div style="font-size: 4rem;">🐌</div>
+      <h2>No snails yet!</h2>
+      <p>Start tracking snails in your garden by adding your first one.</p>
+      <a href="add-snail.html" class="btn" style="margin-top: 20px;">Add Your First Snail</a>
+    </div>
+  </main>
+  
+  <script src="config.js"></script><!-- Optional: Create this file from config.example.js -->
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

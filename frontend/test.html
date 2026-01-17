@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snail Tracker - Test Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .test-item {
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      background: #f9f6f0;
+      border-left: 4px solid #6b9e78;
+    }
+    .test-pass { border-color: #5cb85c; background: #d4edda; }
+    .test-fail { border-color: #d9534f; background: #f8d7da; }
+    .test-pending { border-color: #f0ad4e; background: #fcf8e3; }
+    button {
+      padding: 10px 20px;
+      background: #6b9e78;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover { background: #5a8667; }
+  </style>
+</head>
+<body>
+  <h1>🐌 Snail Tracker - System Test</h1>
+  <p>This page helps verify your deployment is working correctly.</p>
+  
+  <h2>Frontend Tests</h2>
+  <div id="frontend-tests"></div>
+  
+  <h2>Backend Tests</h2>
+  <button onclick="testBackend()">Run Backend Tests</button>
+  <div id="backend-tests"></div>
+  
+  <h2>Quick Links</h2>
+  <p>
+    <a href="index.html">Go to Login Page</a> |
+    <a href="app.html">Go to App (requires login)</a>
+  </p>
+  
+  <script src="config.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // Frontend tests
+    const frontendTests = [
+      { name: 'CSS loaded', test: () => document.styleSheets.length > 0 },
+      { name: 'API client available', test: () => typeof api !== 'undefined' },
+      { name: 'HTML escape function available', test: () => typeof escapeHtml === 'function' },
+      { name: 'Config or default API URL set', test: () => typeof API_BASE_URL !== 'undefined' || (window.SNAIL_CONFIG && window.SNAIL_CONFIG.apiBaseUrl) }
+    ];
+    
+    const frontendDiv = document.getElementById('frontend-tests');
+    frontendTests.forEach(test => {
+      const passed = test.test();
+      frontendDiv.innerHTML += `
+        <div class="test-item ${passed ? 'test-pass' : 'test-fail'}">
+          ${passed ? '✓' : '✗'} ${test.name}
+        </div>
+      `;
+    });
+    
+    // Backend tests
+    async function testBackend() {
+      const backendDiv = document.getElementById('backend-tests');
+      backendDiv.innerHTML = '<div class="test-item test-pending">Running tests...</div>';
+      
+      const tests = [
+        {
+          name: 'Backend reachable',
+          test: async () => {
+            try {
+              const response = await fetch(`${api.baseUrl}/api/snails`);
+              return response.status === 401; // Should return 401 without auth
+            } catch (e) {
+              return false;
+            }
+          }
+        },
+        {
+          name: 'Authentication works',
+          test: async () => {
+            // Prompt for credentials
+            const username = prompt('Enter username (default: snailfamily):', 'snailfamily');
+            const password = prompt('Enter password:');
+            if (!username || !password) return false;
+            
+            try {
+              await api.login(username, password);
+              return true;
+            } catch (e) {
+              return false;
+            }
+          }
+        },
+        {
+          name: 'Can list snails',
+          test: async () => {
+            try {
+              if (!api.isAuthenticated()) return false;
+              const data = await api.getSnails();
+              return Array.isArray(data.snails);
+            } catch (e) {
+              return false;
+            }
+          }
+        }
+      ];
+      
+      backendDiv.innerHTML = '';
+      for (const test of tests) {
+        backendDiv.innerHTML += `
+          <div class="test-item test-pending">⏳ ${test.name}...</div>
+        `;
+        
+        const passed = await test.test();
+        const lastTest = backendDiv.lastElementChild;
+        lastTest.className = `test-item ${passed ? 'test-pass' : 'test-fail'}`;
+        lastTest.textContent = `${passed ? '✓' : '✗'} ${test.name}`;
+        
+        if (!passed && test.name === 'Authentication works') {
+          break; // Stop if auth fails
+        }
+      }
+    }
+  </script>
+</body>
+</html>
