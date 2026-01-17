@@ -1,9 +1,13 @@
 // API client with Basic Auth for Snail Tracker
 
-// Configuration - UPDATE THIS URL when deploying to production
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:3000'
-  : 'https://snail-selfie.vercel.app'; // Update with your Vercel deployment URL
+// Configuration - IMPORTANT: Update this URL when deploying to production
+// Option 1: Create a config.js file (copy from config.example.js) and set window.SNAIL_CONFIG.apiBaseUrl
+// Option 2: Update the production URL below before deploying frontend
+const API_BASE_URL = (typeof window !== 'undefined' && window.SNAIL_CONFIG?.apiBaseUrl) 
+  ? window.SNAIL_CONFIG.apiBaseUrl
+  : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:3000'
+    : 'https://snail-selfie.vercel.app'; // TODO: Replace with your actual Vercel deployment URL
 
 class SnailAPI {
   constructor() {

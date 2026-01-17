@@ -147,6 +147,16 @@ Then navigate to `http://localhost:8000`
 
 1. **Update API URL**
    
+   You have two options:
+   
+   **Option A: Using config.js (Recommended)**
+   ```bash
+   cd frontend
+   cp config.example.js config.js
+   # Edit config.js and set your Vercel URL
+   ```
+   
+   **Option B: Edit api.js directly**
    Edit `frontend/js/api.js` and update the API_BASE_URL:
    
    ```javascript

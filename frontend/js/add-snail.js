@@ -33,6 +33,8 @@ if (isEditMode) {
   loadSnail();
 }
 
+let existingImages = [];
+
 // Load existing snail for editing
 async function loadSnail() {
   try {
@@ -52,6 +54,7 @@ async function loadSnail() {
     
     // Show existing images (but don't add to uploadedImages as they're already saved)
     if (snail.images && snail.images.length > 0) {
+      existingImages = snail.images;
       imagePreview.innerHTML = snail.images.map(img => `
         <div class="image-preview-item">
           <img src="${img.thumbnail_url || img.image_url}" class="image-preview-img">
@@ -122,7 +125,10 @@ function renderImagePreviews() {
 
 // Estimate age
 estimateAgeBtn.addEventListener('click', async () => {
-  if (uploadedImages.length === 0) {
+  // Use uploaded images first, fall back to existing images in edit mode
+  const imagesToUse = uploadedImages.length > 0 ? uploadedImages : existingImages;
+  
+  if (imagesToUse.length === 0) {
     alert('Please upload at least one image first.');
     return;
   }
@@ -132,7 +138,7 @@ estimateAgeBtn.addEventListener('click', async () => {
     estimateAgeBtn.textContent = 'AI is thinking...';
     errorMessage.classList.add('hidden');
     
-    const imageUrl = uploadedImages[0].url;
+    const imageUrl = imagesToUse[0].url || imagesToUse[0].image_url;
     const result = await api.estimateAge(imageUrl);
     
     ageLabelSelect.value = result.approxAgeLabel;
