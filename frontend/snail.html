@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐌 Snail Detail</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>🐌 <a href="app.html" style="color: white; text-decoration: none;">Snail Tracker</a></h1>
+    </div>
+  </header>
+  
+  <main class="container">
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading snail...</p>
+    </div>
+    
+    <div id="errorMessage" class="message message-error hidden"></div>
+    
+    <div id="snailDetail" class="hidden">
+      <div class="snail-detail-header">
+        <div>
+          <h2 id="snailName"></h2>
+          <span id="snailTag" class="snail-tag"></span>
+        </div>
+        <div class="flex gap-10">
+          <a id="editBtn" href="#" class="btn-small">Edit</a>
+          <button id="deleteBtn" class="btn-small btn-danger">Delete</button>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h3>Reference Images</h3>
+        <div id="snailImages" class="snail-images"></div>
+      </div>
+      
+      <div class="card snail-info">
+        <h3>Information</h3>
+        
+        <div class="info-row" id="ageRow">
+          <span class="info-label">Age Estimate <span class="ai-badge">AI</span></span>
+          <div class="info-value" id="ageValue"></div>
+        </div>
+        
+        <div class="info-row" id="notesRow">
+          <span class="info-label">Notes</span>
+          <div class="info-value" id="notesValue"></div>
+        </div>
+      </div>
+      
+      <div class="timeline">
+        <div class="flex-between mb-20">
+          <h2>Sightings Timeline</h2>
+          <button id="addSightingBtn" class="btn">+ Add Sighting</button>
+        </div>
+        
+        <div id="sightingsList"></div>
+        
+        <div id="noSightings" class="card text-center hidden">
+          <p>No sightings yet. Add your first sighting!</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Add Sighting Modal -->
+  <div id="sightingModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add Sighting</h2>
+        <button class="modal-close" onclick="closeSightingModal()">×</button>
+      </div>
+      
+      <form id="sightingForm">
+        <div class="form-group">
+          <label for="location">Location *</label>
+          <select id="location" required>
+            <option value="">Choose location...</option>
+            <option value="patio">Patio</option>
+            <option value="flower bed">Flower Bed</option>
+            <option value="compost">Compost</option>
+            <option value="hedge">Hedge</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="sightingNotes">Notes</label>
+          <textarea id="sightingNotes" placeholder="What was the snail doing?"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="sightingImages">Photos</label>
+          <input type="file" id="sightingImages" accept="image/*" capture="environment" multiple>
+          <div id="sightingImagePreview" class="image-preview"></div>
+        </div>
+        
+        <div id="sightingError" class="message message-error hidden"></div>
+        
+        <div class="flex gap-10">
+          <button type="submit" class="btn">Save Sighting</button>
+          <button type="button" class="btn-secondary" onclick="closeSightingModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script src="js/api.js"></script>
+  <script src="js/snail.js"></script>
+</body>
+</html>
