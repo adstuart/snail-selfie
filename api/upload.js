@@ -3,6 +3,15 @@ import { withAuth } from '../lib/auth.js';
 import { put } from '@vercel/blob';
 
 async function handler(req, res) {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
@@ -27,11 +36,11 @@ async function handler(req, res) {
     
     res.status(200).json({
       url: blob.url,
-      thumbnail_url: blob.url // In production, you might want to generate actual thumbnails
+      thumbnail_url: blob.url
     });
   } catch (error) {
     console.error('Error uploading image:', error);
-    res.status(500).json({ error: 'Failed to upload image' });
+    res.status(500).json({ error: 'Failed to upload image', details: error.message });
   }
 }
 
