@@ -56,11 +56,11 @@ function renderSnails() {
     const imageUrl = snail.primary_image || 'https://via.placeholder.com/300x200?text=No+Image';
     
     return `
-      <div class="snail-card" onclick="window.location.href='snail.html?id=${snail.id}'">
-        <img src="${imageUrl}" alt="${snail.name}" class="snail-card-image">
+      <div class="snail-card" onclick="window.location.href='snail.html?id=${encodeURIComponent(snail.id)}'">
+        <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(snail.name)}" class="snail-card-image">
         <div class="snail-card-content">
-          <h3>${snail.name}</h3>
-          <span class="snail-tag">${snail.species_tag}</span>
+          <h3>${escapeHtml(snail.name)}</h3>
+          <span class="snail-tag">${escapeHtml(snail.species_tag)}</span>
           <div class="snail-meta">
             <div>📍 Last seen: ${lastSeen}</div>
           </div>

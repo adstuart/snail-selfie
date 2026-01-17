@@ -16,6 +16,13 @@ async function handler(req, res) {
     return;
   }
   
+  // Validate garden location against allowed values
+  const validLocations = ['patio', 'flower bed', 'compost', 'hedge', 'other'];
+  if (!validLocations.includes(garden_location.toLowerCase())) {
+    res.status(400).json({ error: 'Invalid garden location' });
+    return;
+  }
+  
   try {
     // Create sighting
     const sightingResult = await sql.query(

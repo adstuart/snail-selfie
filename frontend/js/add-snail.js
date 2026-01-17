@@ -57,7 +57,7 @@ async function loadSnail() {
       existingImages = snail.images;
       imagePreview.innerHTML = snail.images.map(img => `
         <div class="image-preview-item">
-          <img src="${img.thumbnail_url || img.image_url}" class="image-preview-img">
+          <img src="${escapeHtml(img.thumbnail_url || img.image_url)}" class="image-preview-img">
         </div>
       `).join('');
       estimateAgeBtn.disabled = false;
@@ -117,7 +117,7 @@ window.removeImage = function(index) {
 function renderImagePreviews() {
   imagePreview.innerHTML = uploadedImages.map((img, index) => `
     <div class="image-preview-item">
-      <img src="${img.thumbnail_url || img.url}" class="image-preview-img">
+      <img src="${escapeHtml(img.thumbnail_url || img.url)}" class="image-preview-img">
       <button type="button" class="image-preview-remove" onclick="removeImage(${index})">×</button>
     </div>
   `).join('');

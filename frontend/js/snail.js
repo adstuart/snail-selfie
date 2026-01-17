@@ -65,7 +65,7 @@ function renderSnail() {
   // Render images
   if (currentSnail.images && currentSnail.images.length > 0) {
     snailImages.innerHTML = currentSnail.images.map(img => 
-      `<img src="${img.image_url}" alt="${currentSnail.name}" class="snail-image">`
+      `<img src="${escapeHtml(img.image_url)}" alt="${escapeHtml(currentSnail.name)}" class="snail-image">`
     ).join('');
   } else {
     snailImages.innerHTML = '<p>No images</p>';
@@ -74,9 +74,9 @@ function renderSnail() {
   // Render age info
   if (currentSnail.approx_age) {
     ageValue.innerHTML = `
-      <strong>${currentSnail.approx_age}</strong>
-      ${currentSnail.age_confidence ? `<span class="confidence-${currentSnail.age_confidence}">(${currentSnail.age_confidence} confidence)</span>` : ''}
-      ${currentSnail.age_explanation ? `<br><em>${currentSnail.age_explanation}</em>` : ''}
+      <strong>${escapeHtml(currentSnail.approx_age)}</strong>
+      ${currentSnail.age_confidence ? `<span class="confidence-${escapeHtml(currentSnail.age_confidence)}">(${escapeHtml(currentSnail.age_confidence)} confidence)</span>` : ''}
+      ${currentSnail.age_explanation ? `<br><em>${escapeHtml(currentSnail.age_explanation)}</em>` : ''}
     `;
   } else {
     ageValue.textContent = 'Not estimated yet';
@@ -101,7 +101,7 @@ function renderSnail() {
       const imagesHtml = sighting.images && sighting.images.length > 0
         ? `<div class="sighting-images">
             ${sighting.images.map(img => 
-              `<img src="${img.thumbnail_url || img.image_url}" alt="Sighting" class="sighting-image">`
+              `<img src="${escapeHtml(img.thumbnail_url || img.image_url)}" alt="Sighting" class="sighting-image">`
             ).join('')}
            </div>`
         : '';
@@ -109,10 +109,10 @@ function renderSnail() {
       return `
         <div class="sighting-item">
           <div class="sighting-header">
-            <span class="sighting-location">📍 ${sighting.garden_location}</span>
+            <span class="sighting-location">📍 ${escapeHtml(sighting.garden_location)}</span>
             <span class="sighting-date">${formattedDate}</span>
           </div>
-          ${sighting.notes ? `<p>${sighting.notes}</p>` : ''}
+          ${sighting.notes ? `<p>${escapeHtml(sighting.notes)}</p>` : ''}
           ${imagesHtml}
         </div>
       `;

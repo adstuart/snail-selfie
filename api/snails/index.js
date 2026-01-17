@@ -17,6 +17,10 @@ async function handleGet(req, res) {
   try {
     const { search, sortBy = 'name' } = req.query;
     
+    // Validate sortBy to prevent SQL injection
+    const validSortOptions = ['name', 'last_seen'];
+    const safeSortBy = validSortOptions.includes(sortBy) ? sortBy : 'name';
+    
     let query = `
       SELECT s.*, 
              si.image_url as primary_image,
@@ -32,7 +36,7 @@ async function handleGet(req, res) {
       params.push(`%${search}%`);
     }
     
-    if (sortBy === 'last_seen') {
+    if (safeSortBy === 'last_seen') {
       query += ` ORDER BY last_seen DESC NULLS LAST`;
     } else {
       query += ` ORDER BY s.name ASC`;

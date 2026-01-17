@@ -1,5 +1,13 @@
 // API client with Basic Auth for Snail Tracker
 
+// Utility function to escape HTML and prevent XSS
+function escapeHtml(text) {
+  if (text === null || text === undefined) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 // Configuration - IMPORTANT: Update this URL when deploying to production
 // Option 1: Create a config.js file (copy from config.example.js) and set window.SNAIL_CONFIG.apiBaseUrl
 // Option 2: Update the production URL below before deploying frontend
