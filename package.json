@@ -2,6 +2,7 @@
   "name": "snail-tracker",
   "version": "1.0.0",
   "description": "A kid-friendly web app to track snails in your garden",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "vercel dev",
