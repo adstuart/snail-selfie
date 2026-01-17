@@ -15,7 +15,7 @@ A kid-friendly web app to track snails in your garden! Perfect for families who 
 
 | Component | Technology | Hosting |
 |-----------|------------|---------|
-| **Frontend** | Vanilla HTML/CSS/JS | GitHub Pages |
+| **Frontend** | Vanilla HTML/CSS/JS | Vercel (public/ directory) |
 | **Backend API** | Vercel Serverless Functions (Node.js) | Vercel |
 | **Database** | Vercel Postgres with pgvector | Vercel |
 | **Image Storage** | Vercel Blob | Vercel |
@@ -104,24 +104,24 @@ This starts the Vercel development server at `http://localhost:3000`
 
 ### 7. Open Frontend
 
-Open `frontend/index.html` in your browser or use a local server:
+Open `public/index.html` in your browser or use a local server:
 
 ```bash
 # Using Python
-cd frontend
+cd public
 python -m http.server 8000
 
 # Using Node.js http-server
-npx http-server frontend -p 8000
+npx http-server public -p 8000
 ```
 
 Then navigate to `http://localhost:8000`
 
-**Note**: Update the API URL in `frontend/js/api.js` if needed for local development.
+**Note**: Update the API URL in `public/js/api.js` if needed for local development.
 
 ## Production Deployment
 
-### Deploy Backend to Vercel
+### Deploy to Vercel (Backend + Frontend)
 
 1. **Connect GitHub Repository**
    - Go to [Vercel Dashboard](https://vercel.com/dashboard)
@@ -138,26 +138,19 @@ Then navigate to `http://localhost:8000`
      - `POSTGRES_URL`
      - `BLOB_READ_WRITE_TOKEN`
 
-3. **Deploy**
-   - Click "Deploy"
-   - Wait for deployment to complete
-   - Note your deployment URL (e.g., `https://snail-selfie.vercel.app`)
-
-### Deploy Frontend to GitHub Pages
-
-1. **Update API URL**
+3. **Update API URL (Optional)**
    
-   You have two options:
+   If needed, you can configure the API URL:
    
    **Option A: Using config.js (Recommended)**
    ```bash
-   cd frontend
+   cd public
    cp config.example.js config.js
    # Edit config.js and set your Vercel URL
    ```
    
    **Option B: Edit api.js directly**
-   Edit `frontend/js/api.js` and update the API_BASE_URL:
+   Edit `public/js/api.js` and update the API_BASE_URL:
    
    ```javascript
    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -165,17 +158,16 @@ Then navigate to `http://localhost:8000`
      : 'https://YOUR-PROJECT.vercel.app'; // Replace with your Vercel URL
    ```
 
-2. **Enable GitHub Pages**
-   - Go to your GitHub repository settings
-   - Navigate to "Pages" section
-   - Source: Select "Deploy from a branch"
-   - Branch: Select `main` (or your default branch)
-   - Folder: Select `/frontend`
-   - Click "Save"
+4. **Deploy**
+   - Click "Deploy"
+   - Wait for deployment to complete
+   - Your app will be available at your Vercel URL (e.g., `https://snail-selfie-project.vercel.app`)
 
-3. **Access Your App**
-   - Your app will be available at `https://YOUR-USERNAME.github.io/snail-selfie/`
-   - Wait a few minutes for the first deployment
+**Note**: Vercel automatically serves files from the `public/` directory at the root URL, so:
+- `https://your-app.vercel.app/` → serves `public/index.html`
+- `https://your-app.vercel.app/app.html` → serves `public/app.html`
+- `https://your-app.vercel.app/css/styles.css` → serves `public/css/styles.css`
+- `https://your-app.vercel.app/api/snails` → serverless function
 
 ## Usage
 

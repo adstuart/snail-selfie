@@ -12,7 +12,7 @@ Complete kid-friendly web application for tracking garden snails with AI-powered
 
 ## Architecture
 ```
-Frontend (GitHub Pages)
+Frontend (Vercel - public/)
     ↓ HTTPS + Basic Auth
 Backend (Vercel Serverless)
     ↓
@@ -28,7 +28,7 @@ Backend (Vercel Serverless)
 - **Storage:** Vercel Blob
 - **AI:** OpenAI GPT-4o Vision, text-embedding-3-small
 - **Auth:** HTTP Basic Authentication
-- **Deployment:** Vercel + GitHub Pages
+- **Deployment:** Vercel
 
 ## Key Features
 1. ✅ Snail profile management with images
@@ -56,7 +56,7 @@ snail-selfie/
 │   ├── sightings/         # Sightings CRUD
 │   ├── snails/            # Snails CRUD
 │   └── upload.js          # Image upload
-├── frontend/              # Static frontend
+├── public/                # Static frontend
 │   ├── css/              # Styles
 │   ├── js/               # Client-side logic
 │   ├── assets/           # Images/icons
@@ -84,11 +84,10 @@ snail-selfie/
 - `BLOB_READ_WRITE_TOKEN`
 
 ### Deployment Steps
-1. Deploy backend to Vercel (5 min)
+1. Deploy to Vercel (7 min)
 2. Set up Postgres database (5 min)
 3. Set up Blob storage (2 min)
-4. Configure frontend API URL (1 min)
-5. Enable GitHub Pages (2 min)
+4. Configure frontend API URL (optional - 1 min)
 
 **Total deployment time:** ~15 minutes
 

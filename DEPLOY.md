@@ -5,7 +5,7 @@
 - GitHub account  
 - OpenAI API key
 
-## Step 1: Deploy Backend (5 minutes)
+## Step 1: Deploy to Vercel (7 minutes)
 
 1. **Connect to Vercel**
    - Go to https://vercel.com
@@ -33,27 +33,26 @@
 
 5. **Deploy**
    - Click "Deploy"
-   - Note your backend URL (e.g., `https://snail-selfie.vercel.app`)
+   - Note your deployment URL (e.g., `https://snail-selfie-project.vercel.app`)
 
-## Step 2: Deploy Frontend (2 minutes)
+## Step 2: Configure Frontend (Optional - 1 minute)
 
-1. **Configure API URL**
+1. **Configure API URL (if needed)**
    ```bash
-   cd frontend
+   cd public
    cp config.example.js config.js
    # Edit config.js and set apiBaseUrl to your Vercel URL
    ```
 
-2. **Enable GitHub Pages**
-   - Go to your GitHub repository → Settings → Pages
-   - Source: Deploy from a branch
-   - Branch: `main`, Folder: `/frontend`
-   - Click Save
-
-3. **Access Your App**
-   - Wait 2-3 minutes
-   - Visit `https://YOUR-USERNAME.github.io/snail-selfie/`
+2. **Access Your App**
+   - Your app will be available at your Vercel URL (e.g., `https://snail-selfie-project.vercel.app`)
+   - Vercel automatically serves files from `public/` directory at the root
    - Login with your credentials
+
+**Note**: Vercel serves the frontend and backend from the same domain:
+- `https://snail-selfie-project.vercel.app/` → `public/index.html`
+- `https://snail-selfie-project.vercel.app/app.html` → `public/app.html`
+- `https://snail-selfie-project.vercel.app/api/snails` → serverless function
 
 ## Troubleshooting
 
@@ -61,6 +60,7 @@
 - Check that the API URL in `config.js` or `api.js` matches your Vercel deployment
 - Check browser console for CORS errors
 - Verify all environment variables are set in Vercel
+- Note: If using default config, the frontend should auto-detect the API URL
 
 ### Database errors
 - Make sure you ran the `schema.sql` script
@@ -97,7 +97,7 @@ cp .env.example .env
 vercel dev
 
 # Open frontend (in another terminal)
-cd frontend
+cd public
 python -m http.server 8000
 # or: npx http-server -p 8000
 
