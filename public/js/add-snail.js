@@ -24,8 +24,13 @@ const ageConfidenceSelect = document.getElementById('ageConfidence');
 const errorMessage = document.getElementById('errorMessage');
 const successMessage = document.getElementById('successMessage');
 const saveBtn = document.getElementById('saveBtn');
+const aiAnalysisLoading = document.getElementById('aiAnalysisLoading');
+const possibleMatches = document.getElementById('possibleMatches');
+const matchesList = document.getElementById('matchesList');
+const dismissMatches = document.getElementById('dismissMatches');
 
 let uploadedImages = [];
+let currentMatches = [];
 
 // Set page title
 if (isEditMode) {
@@ -94,6 +99,11 @@ imagesInput.addEventListener('change', async (e) => {
       
       // Enable age estimation button
       estimateAgeBtn.disabled = false;
+      
+      // Auto-analyze the first uploaded image
+      if (uploadedImages.length === 1 && !isEditMode) {
+        await autoAnalyzeSnail(result.url);
+      }
     } catch (error) {
       console.error('Error uploading image:', error);
       alert('Failed to upload image. Please try again.');
@@ -122,6 +132,82 @@ function renderImagePreviews() {
     </div>
   `).join('');
 }
+
+// Auto-analyze snail after image upload
+async function autoAnalyzeSnail(imageUrl) {
+  try {
+    // Show loading state
+    aiAnalysisLoading.classList.remove('hidden');
+    errorMessage.classList.add('hidden');
+    successMessage.classList.add('hidden');
+    possibleMatches.classList.add('hidden');
+    
+    // Call the analyze API
+    const result = await api.analyzeSnail(imageUrl);
+    
+    // Auto-fill species field
+    if (result.species) {
+      speciesInput.value = result.species;
+    }
+    
+    // Auto-fill age fields
+    if (result.age) {
+      ageLabelSelect.value = result.age.label;
+      ageExplanationInput.value = result.age.explanation;
+      ageConfidenceSelect.value = result.age.confidence;
+      ageResult.classList.remove('hidden');
+    }
+    
+    // Show matches if found
+    if (result.matches && result.matches.length > 0) {
+      currentMatches = result.matches;
+      displayMatches(result.matches);
+    }
+    
+    // Hide loading state
+    aiAnalysisLoading.classList.add('hidden');
+    
+    // Show success message
+    successMessage.textContent = '✅ AI analysis complete! Species and age auto-filled.';
+    successMessage.classList.remove('hidden');
+    
+  } catch (error) {
+    console.error('Error analyzing snail:', error);
+    aiAnalysisLoading.classList.add('hidden');
+    errorMessage.textContent = 'AI analysis failed. You can still manually fill in the details.';
+    errorMessage.classList.remove('hidden');
+  }
+}
+
+// Display possible matches
+function displayMatches(matches) {
+  matchesList.innerHTML = matches.map(match => `
+    <div class="match-item" onclick="viewSnail('${escapeHtml(match.snail_id)}')">
+      <img src="${escapeHtml(match.thumbnail_url)}" class="match-thumbnail" alt="${escapeHtml(match.snail_name)}">
+      <div class="match-info">
+        <strong>${escapeHtml(match.snail_name)}</strong>
+        <div style="font-size: 0.9rem; color: #666;">${escapeHtml(match.species_tag || 'Garden snail')}</div>
+        <div class="match-confidence confidence-${match.confidence >= 80 ? 'high' : match.confidence >= 60 ? 'medium' : 'low'}">
+          ${match.confidence}% match
+        </div>
+      </div>
+      <button type="button" class="btn-small" onclick="event.stopPropagation(); viewSnail('${escapeHtml(match.snail_id)}')">View</button>
+    </div>
+  `).join('');
+  
+  possibleMatches.classList.remove('hidden');
+}
+
+// View existing snail
+window.viewSnail = function(snailId) {
+  window.location.href = `snail.html?id=${snailId}`;
+};
+
+// Dismiss matches
+dismissMatches.addEventListener('click', () => {
+  possibleMatches.classList.add('hidden');
+  currentMatches = [];
+});
 
 // Estimate age
 estimateAgeBtn.addEventListener('click', async () => {

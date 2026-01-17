@@ -195,6 +195,17 @@ class SnailAPI {
     if (!response.ok) throw new Error('Failed to identify snail');
     return response.json();
   }
+
+  async analyzeSnail(imageUrl) {
+    const response = await fetch(`${this.baseUrl}/api/ai/analyze`, {
+      method: 'POST',
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify({ imageUrl })
+    });
+    
+    if (!response.ok) throw new Error('Failed to analyze snail');
+    return response.json();
+  }
 }
 
 // Create global instance

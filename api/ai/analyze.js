@@ -1,7 +1,7 @@
-// POST /api/ai/identify - Find matching snails from image using GPT-4 Vision
+// POST /api/ai/analyze - Analyze snail image for species, age, and matching
 import { withAuth } from '../../lib/auth.js';
 import { sql } from '../../lib/db.js';
-import { compareSnailImages } from '../../lib/openai.js';
+import { analyzeSnailImage, compareSnailImages } from '../../lib/openai.js';
 
 async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -17,7 +17,10 @@ async function handler(req, res) {
       return;
     }
     
-    // Get all snail images (prioritize primary images)
+    // Step 1: Analyze the uploaded image for species and age
+    const analysis = await analyzeSnailImage(imageUrl);
+    
+    // Step 2: Find potential matches by comparing to existing snail images
     const result = await sql.query(
       `SELECT si.image_url, si.thumbnail_url, s.id as snail_id, s.name, s.species_tag
        FROM snail_images si
@@ -29,7 +32,7 @@ async function handler(req, res) {
        LIMIT 20`
     );
     
-    // Compare uploaded image with existing snail images using GPT-4 Vision
+    // Step 3: Compare uploaded image with existing snail images using GPT-4 Vision
     const matches = [];
     for (const row of result.rows) {
       try {
@@ -52,14 +55,25 @@ async function handler(req, res) {
       }
     }
     
-    // Sort by confidence and take top 5
+    // Sort matches by confidence (highest first)
     matches.sort((a, b) => b.confidence - a.confidence);
+    
+    // Return top 5 matches
     const topMatches = matches.slice(0, 5);
     
-    res.status(200).json({ matches: topMatches });
+    res.status(200).json({
+      species: analysis.species,
+      age: {
+        label: analysis.age,
+        explanation: analysis.ageExplanation,
+        confidence: analysis.ageConfidence
+      },
+      distinctiveFeatures: analysis.distinctiveFeatures,
+      matches: topMatches
+    });
   } catch (error) {
-    console.error('Error identifying snail:', error);
-    res.status(500).json({ error: 'Failed to identify snail' });
+    console.error('Error analyzing snail:', error);
+    res.status(500).json({ error: 'Failed to analyze snail' });
   }
 }
 

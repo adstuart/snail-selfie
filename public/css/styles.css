@@ -494,10 +494,12 @@ select:focus {
   margin-bottom: 10px;
   cursor: pointer;
   transition: background-color 0.2s;
+  border: 2px solid transparent;
 }
 
 .match-item:hover {
   background-color: var(--accent-color);
+  border-color: var(--primary-color);
 }
 
 .match-thumbnail {
@@ -505,15 +507,23 @@ select:focus {
   height: 60px;
   object-fit: cover;
   border-radius: 8px;
+  flex-shrink: 0;
 }
 
 .match-info {
   flex: 1;
 }
 
+.match-info strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 1.05rem;
+}
+
 .match-confidence {
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  margin-top: 4px;
 }
 
 /* Responsive Design */

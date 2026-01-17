@@ -39,6 +39,25 @@
           <div id="imagePreview" class="image-preview"></div>
         </div>
         
+        <!-- AI Analysis Loading State -->
+        <div id="aiAnalysisLoading" class="card hidden" style="background-color: var(--accent-color); text-align: center; padding: 20px;">
+          <div class="spinner" style="margin: 10px auto;"></div>
+          <p style="margin-top: 10px; font-size: 1rem;">🤖 Analyzing snail...</p>
+          <p style="font-size: 0.9rem; color: #666;">Identifying species, estimating age, and checking for matches...</p>
+        </div>
+        
+        <!-- Possible Matches Section -->
+        <div id="possibleMatches" class="card hidden" style="background-color: #fff3cd; border: 2px solid #ffc107; margin: 20px 0;">
+          <h3>🔍 Possible Matches Found!</h3>
+          <p style="margin-bottom: 15px; font-size: 0.95rem;">
+            This snail might already be in your collection. Click to view an existing snail or continue adding as new.
+          </p>
+          <div id="matchesList" class="match-list"></div>
+          <button type="button" id="dismissMatches" class="btn-secondary btn-small" style="margin-top: 10px;">
+            Continue Adding as New Snail
+          </button>
+        </div>
+        
         <div class="card" style="background-color: var(--accent-color); margin: 20px 0;">
           <h3>AI Age Estimation <span class="ai-badge">AI</span></h3>
           <p style="margin-bottom: 15px; font-size: 0.95rem;">
