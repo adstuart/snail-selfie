@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "vercel dev",
-    "build": "vercel build",
+    "build": "echo 'No build required - static site'",
     "deploy": "vercel"
   },
   "dependencies": {
