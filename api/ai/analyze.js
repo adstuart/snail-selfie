@@ -33,27 +33,35 @@ async function handler(req, res) {
     );
     
     // Step 3: Compare uploaded image with existing snail images using GPT-4 Vision
-    const matches = [];
-    for (const row of result.rows) {
+    const comparisonPromises = result.rows.map(async (row) => {
       try {
         const comparison = await compareSnailImages(imageUrl, row.image_url);
         
         // Only include matches with confidence > 50%
         if (comparison.confidence > 50) {
-          matches.push({
+          return {
             snail_id: row.snail_id,
             snail_name: row.name,
             species_tag: row.species_tag,
             thumbnail_url: row.thumbnail_url || row.image_url,
             confidence: comparison.confidence,
             reasoning: comparison.reasoning
-          });
+          };
         }
+        return null;
       } catch (error) {
         console.error(`Error comparing with snail ${row.snail_id}:`, error);
-        // Continue with other comparisons even if one fails
+        return null;
       }
-    }
+    });
+    
+    // Wait for all comparisons to complete
+    const comparisonResults = await Promise.allSettled(comparisonPromises);
+    
+    // Extract successful matches
+    const matches = comparisonResults
+      .filter(result => result.status === 'fulfilled' && result.value !== null)
+      .map(result => result.value);
     
     // Sort matches by confidence (highest first)
     matches.sort((a, b) => b.confidence - a.confidence);

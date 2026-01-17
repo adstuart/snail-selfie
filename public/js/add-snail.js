@@ -182,7 +182,7 @@ async function autoAnalyzeSnail(imageUrl) {
 // Display possible matches
 function displayMatches(matches) {
   matchesList.innerHTML = matches.map(match => `
-    <div class="match-item" onclick="viewSnail('${escapeHtml(match.snail_id)}')">
+    <div class="match-item">
       <img src="${escapeHtml(match.thumbnail_url)}" class="match-thumbnail" alt="${escapeHtml(match.snail_name)}">
       <div class="match-info">
         <strong>${escapeHtml(match.snail_name)}</strong>
@@ -191,7 +191,7 @@ function displayMatches(matches) {
           ${match.confidence}% match
         </div>
       </div>
-      <button type="button" class="btn-small" onclick="event.stopPropagation(); viewSnail('${escapeHtml(match.snail_id)}')">View</button>
+      <button type="button" class="btn-small" onclick="viewSnail('${escapeHtml(match.snail_id)}')">View</button>
     </div>
   `).join('');
   
